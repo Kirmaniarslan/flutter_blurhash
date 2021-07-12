@@ -12,6 +12,11 @@ class BlurHash extends StatefulWidget {
     Key key,
     @required this.hash,
     this.color = Colors.blueGrey,
+    this.showLoader = false,
+    this.loaderColor = Colors.white,
+    this.loaderWidth = 70,
+    this.loaderHeight = 70,
+    this.strokeWidth = 3,
     this.imageFit = BoxFit.fill,
     this.decodingWidth = _DEFAULT_SIZE,
     this.decodingHeight = _DEFAULT_SIZE,
@@ -42,6 +47,18 @@ class BlurHash extends StatefulWidget {
 
   /// Displayed background color before decoding
   final Color color;
+
+  /// Loader color
+  final bool showLoader;
+
+  /// Loader color
+  final Color loaderColor;
+
+  final double loaderWidth;
+
+  final double loaderHeight;
+
+  final double strokeWidth;
 
   /// How to fit decoded & downloaded image
   final BoxFit imageFit;
@@ -128,7 +145,19 @@ class BlurHashState extends State<BlurHash> {
             curve: widget.curve,
           );
         } else {
-          return const SizedBox();
+          return widget.showLoader ? Center(
+            child: Container(
+              width: widget.loaderWidth,
+              height: widget.loaderHeight,
+              child: CircularProgressIndicator(
+                value: loadingProgress.expectedTotalBytes != null ?
+                loadingProgress.cumulativeBytesLoaded / loadingProgress.expectedTotalBytes
+                    : null,
+                valueColor: AlwaysStoppedAnimation<Color>(widget.loaderColor),
+                strokeWidth: widget.strokeWidth,
+              ),
+            ),
+          ) : const SizedBox();
         }
       });
 
